@@ -284,7 +284,10 @@ module.exports = class Runner {
           }
 
           if (batch.isEmpty()) {
-            return
+            // Batch of non-transaction related messages is empty but we still need to 'skip' these txn messagesZ
+            this.consumerGroup.offsetManager.resolvedOffsets[batch.topic][
+              batch.partition
+            ] = batch.lastOffset()
           }
 
           await onBatch(batch)
